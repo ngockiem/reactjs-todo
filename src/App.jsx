@@ -5,6 +5,7 @@ import FilterBar from "./components/FilterBar";
 import Header from "./components/Header";
 import Stats from "./components/Stats";
 import TodoColumn from "./components/TodoColumn";
+import { useTasks } from "./context/TaskContext";
 
 function App() {
   const [modalConfig, setModalConfig] = useState({
@@ -12,6 +13,8 @@ function App() {
     children: null,
     isOpen: false,
   });
+  const { addTask } = useTasks();
+
   const closeModal = () => {
     setModalConfig({
       title: "",
@@ -19,9 +22,30 @@ function App() {
       isOpen: false,
     });
   };
+
+  const handleAddTask = async (formData) => {
+    try {
+      const newTask = {
+        ...formData,
+        id: crypto.randomUUID(),
+        status: "todo",
+        createdAt: new Date().toISOString(),
+      };
+      await addTask(newTask);
+      closeModal();
+      alert("Task added");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      <Header setModalConfig={setModalConfig} closeModal={closeModal} />
+      <Header
+        handleAddTask={handleAddTask}
+        setModalConfig={setModalConfig}
+        closeModal={closeModal}
+      />
       <main className="pt-7 px-8 pb-10">
         {/* title */}
         <div className="flex items-end justify-between mb-7">
@@ -41,11 +65,26 @@ function App() {
         {/* Kanban board */}
         <div className="grid grid-cols-3 gap-5 items-start">
           {/* todo column */}
-          <TodoColumn type="work" />
+          <TodoColumn
+            type="todo"
+            handleAddTask={handleAddTask}
+            setModalConfig={setModalConfig}
+            closeModal={closeModal}
+          />
           {/* doing column */}
-          <TodoColumn type="doing" />
+          <TodoColumn
+            type="doing"
+            handleAddTask={handleAddTask}
+            setModalConfig={setModalConfig}
+            closeModal={closeModal}
+          />
           {/* done column */}
-          <TodoColumn type="done" />
+          <TodoColumn
+            type="done"
+            handleAddTask={handleAddTask}
+            setModalConfig={setModalConfig}
+            closeModal={closeModal}
+          />
         </div>
       </main>
       {modalConfig.isOpen && (

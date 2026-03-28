@@ -2,7 +2,7 @@ import { ListChevronsUpDown } from "lucide-react";
 
 const PriorityLabel = ({ priority }) => {
   return (
-    <div className="flex items-center gap-0.75 text-[11px] font-medium">
+    <div className="flex items-center gap-0.75 text-[11px] font-medium flex-1 justify-end pr-10">
       {priority === "high" && (
         <>
           <ListChevronsUpDown size={10} className="stroke-[#EF4444]" />

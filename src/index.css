@@ -39,7 +39,7 @@
 }
 
 /* Logic đổi màu dựa trên data-type */
-[data-type="work"] {
+[data-type="todo"] {
   --type-bg: var(--color-todo-bg);
   --type-accent: var(--color-todo-accent);
 }
@@ -60,7 +60,7 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center gap-1.5 py-1.75 px-3.5 rounded-xs font-sans text-[13px] font-medium cursor-pointer  border-none;
+    @apply inline-flex items-center gap-1.5 py-1.75 px-3.5 rounded-xs font-flex text-[13px] font-medium cursor-pointer border-none;
   }
   .btn-ghost {
     @apply text-secondary bg-transparent hover:bg-surface2 hover:text-primary transition-colors duration-150 ease-in;

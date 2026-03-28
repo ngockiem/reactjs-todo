@@ -17,7 +17,7 @@ const InputField = forwardRef(({ label, error, className, ...props }, ref) => {
       />
       {error && (
         <p className="text-[11px] text-red-600 py-1.25 px-3 rounded-xs border border-solid border-red-400 bg-red-100 font-medium block mt-1.5">
-          {error}
+          {error?.message}
         </p>
       )}
     </div>
