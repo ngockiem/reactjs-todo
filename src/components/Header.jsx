@@ -1,6 +1,6 @@
 import { ChartNoAxesColumn, Plus } from "lucide-react";
 
-const Header = () => {
+const Header = ({ setModalConfig }) => {
   return (
     <header className="bg-surface border-b border-solid border-border h-15 flex justify-between items-center sticky top-0 z-100 px-8">
       <div className="flex items-center gap-2.5 font-medium text-[15px] tracking-[-0.3px]">
@@ -50,7 +50,16 @@ const Header = () => {
           <ChartNoAxesColumn size={13} />
           <span>Báo cáo</span>
         </button>
-        <button className="btn-primary btn">
+        <button
+          className="btn-primary btn"
+          onClick={() =>
+            setModalConfig({
+              isOpen: true,
+              title: "Thêm task mới",
+              children: "<div>Test</div>",
+            })
+          }
+        >
           <Plus size={13} />
           <span>Thêm task</span>
         </button>
