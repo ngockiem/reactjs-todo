@@ -1,6 +1,7 @@
 import { ChartNoAxesColumn, Plus } from "lucide-react";
+import TaskForm from "./TaskForm";
 
-const Header = ({ setModalConfig }) => {
+const Header = ({ setModalConfig, closeModal }) => {
   return (
     <header className="bg-surface border-b border-solid border-border h-15 flex justify-between items-center sticky top-0 z-100 px-8">
       <div className="flex items-center gap-2.5 font-medium text-[15px] tracking-[-0.3px]">
@@ -56,7 +57,7 @@ const Header = ({ setModalConfig }) => {
             setModalConfig({
               isOpen: true,
               title: "Thêm task mới",
-              children: "<div>Test</div>",
+              children: <TaskForm onClose={closeModal} />,
             })
           }
         >

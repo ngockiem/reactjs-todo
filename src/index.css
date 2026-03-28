@@ -100,4 +100,7 @@
       background-color: var(--type-accent);
     }
   }
+  .input {
+    @apply w-full py-2.25 px-3 border border-solid border-border rounded-xs text-[13px] bg-bg text-primary outline-none focus:border-border-strong transition-colors duration-150 ease-in;
+  }
 }

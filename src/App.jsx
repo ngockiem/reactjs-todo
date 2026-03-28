@@ -21,7 +21,7 @@ function App() {
   };
   return (
     <>
-      <Header setModalConfig={setModalConfig} />
+      <Header setModalConfig={setModalConfig} closeModal={closeModal} />
       <main className="pt-7 px-8 pb-10">
         {/* title */}
         <div className="flex items-end justify-between mb-7">
