@@ -2,6 +2,9 @@ import { Clock, EllipsisVertical, Trash2 } from "lucide-react";
 import PriorityLabel from "./PriorityLabel";
 import TaskForm from "./TaskForm";
 import { useTasks } from "../context/TaskContext";
+import toast from "react-hot-toast";
+import { useModal } from "../context/ModalContext";
+
 const TaskCard = ({
   type,
   title,
@@ -10,26 +13,37 @@ const TaskCard = ({
   priority,
   dueDate,
   task,
-  setModalConfig,
-  closeModal,
 }) => {
   const { editTask, deleteTask } = useTasks();
+  const { openModal, closeModal } = useModal();
 
   const handleEditTask = (formData) => {
-    const tags = formData.tags.split(",");
+    // Fixed logic
     const updatedTask = {
       ...task,
-      tags,
       ...formData,
+      tags: formData.tags
+        ? formData.tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
+        : task.tags,
     };
     editTask(updatedTask);
     closeModal();
-    alert("Task updated");
+    toast.success("Cập nhật task thành công!");
   };
 
   const handleDeleteTask = () => {
     deleteTask(task.id);
-    alert("Task deleted");
+    toast.success("Xóa task thành công!");
+  };
+
+  const handleOpenModal = () => {
+    openModal({
+      title: "Cập nhật task",
+      children: <TaskForm initialValues={task} onSubmit={handleEditTask} />,
+    });
   };
 
   // Kiểm tra an toàn: nếu tags là string thì split, nếu là array thì giữ nguyên, còn lại để mảng trống
@@ -57,19 +71,7 @@ const TaskCard = ({
         </h4>
         <button
           className="w-5.5 h-5.5 flex items-center justify-center rounded-sm text-muted cursor-pointer shrink-0 border-none bg-none hover:text-primary hover:bg-surface2"
-          onClick={() =>
-            setModalConfig({
-              title: "Chỉnh sửa task",
-              children: (
-                <TaskForm
-                  initialValues={task}
-                  onClose={closeModal}
-                  onSubmit={handleEditTask}
-                />
-              ),
-              isOpen: true,
-            })
-          }
+          onClick={() => handleOpenModal()}
         >
           <EllipsisVertical size={16} className="stroke-muted" />
         </button>

@@ -20,12 +20,14 @@ const initialTasks = [
 
 // 3. Tạo Provider để bao quanh app
 export const TaskProvider = ({ children }) => {
-  // Lấy dữ liệu từ localStorage, không có thì dùng initalTasks
-  const saved = localStorage.getItem("tasks");
-  const [tasks, dispatch] = useReducer(
-    taskReducer,
-    saved ? JSON.parse(saved) : initialTasks,
-  );
+  const [tasks, dispatch] = useReducer(taskReducer, initialTasks, (initial) => {
+    try {
+      const saved = localStorage.getItem("tasks");
+      return saved ? JSON.parse(saved) : initial;
+    } catch (error) {
+      return initial;
+    }
+  });
 
   // Mỗi khi task thay đổi thì lưu vào localStorage
   useEffect(() => {

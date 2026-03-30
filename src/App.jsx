@@ -6,46 +6,27 @@ import Header from "./components/Header";
 import Stats from "./components/Stats";
 import TodoColumn from "./components/TodoColumn";
 import { useTasks } from "./context/TaskContext";
+import toast from "react-hot-toast";
+import { useModal } from "./context/ModalContext";
 
 function App() {
-  const [modalConfig, setModalConfig] = useState({
-    title: "",
-    children: null,
-    isOpen: false,
-  });
+  const { modalConfig, closeModal } = useModal();
   const { addTask } = useTasks();
 
-  const closeModal = () => {
-    setModalConfig({
-      title: "",
-      children: null,
-      isOpen: false,
+  const handleAddTask = (formData) => {
+    addTask({
+      ...formData,
+      id: crypto.randomUUID(),
+      status: "todo",
+      createdAt: new Date().toISOString(),
     });
-  };
-
-  const handleAddTask = async (formData) => {
-    try {
-      const newTask = {
-        ...formData,
-        id: crypto.randomUUID(),
-        status: "todo",
-        createdAt: new Date().toISOString(),
-      };
-      await addTask(newTask);
-      closeModal();
-      alert("Task added");
-    } catch (error) {
-      console.log(error);
-    }
+    closeModal();
+    toast.success("Thêm task mới thành công");
   };
 
   return (
     <>
-      <Header
-        handleAddTask={handleAddTask}
-        setModalConfig={setModalConfig}
-        closeModal={closeModal}
-      />
+      <Header handleAddTask={handleAddTask} />
       <main className="pt-7 px-8 pb-10">
         {/* title */}
         <div className="flex items-end justify-between mb-7">
@@ -65,26 +46,11 @@ function App() {
         {/* Kanban board */}
         <div className="grid grid-cols-3 gap-5 items-start">
           {/* todo column */}
-          <TodoColumn
-            type="todo"
-            handleAddTask={handleAddTask}
-            setModalConfig={setModalConfig}
-            closeModal={closeModal}
-          />
+          <TodoColumn type="todo" handleAddTask={handleAddTask} />
           {/* doing column */}
-          <TodoColumn
-            type="doing"
-            handleAddTask={handleAddTask}
-            setModalConfig={setModalConfig}
-            closeModal={closeModal}
-          />
+          <TodoColumn type="doing" handleAddTask={handleAddTask} />
           {/* done column */}
-          <TodoColumn
-            type="done"
-            handleAddTask={handleAddTask}
-            setModalConfig={setModalConfig}
-            closeModal={closeModal}
-          />
+          <TodoColumn type="done" handleAddTask={handleAddTask} />
         </div>
       </main>
       {modalConfig.isOpen && (

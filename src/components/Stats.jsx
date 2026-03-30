@@ -1,24 +1,34 @@
 import { Check, Clock, ClockAlert, Layers } from "lucide-react";
 import { useTasks } from "../context/TaskContext";
+import { useMemo } from "react";
 const Stats = () => {
   const { tasks } = useTasks();
-  const totalTasks = tasks.length || 0;
-  const totalDone = tasks.filter((task) => task.status === "done").length || 0;
-  const totalDoing =
-    tasks.filter((task) => task.status === "doing").length || 0;
-  const totalOverdue = tasks.filter((task) => {
-    if (!task.dueDate) return false;
-    const isNotDone = task.status !== "done";
+  const totalTasks = useMemo(() => tasks.length || 0, [tasks]);
+  const totalDone = useMemo(
+    () => tasks.filter((task) => task.status === "done").length || 0,
+    [tasks],
+  );
+  const totalDoing = useMemo(
+    () => tasks.filter((task) => task.status === "doing").length || 0,
+    [tasks],
+  );
+  const totalOverdue = useMemo(
+    () =>
+      tasks.filter((task) => {
+        if (!task.dueDate) return false;
+        const isNotDone = task.status !== "done";
 
-    const dueDate = new Date(task.dueDate);
-    const today = new Date();
+        const dueDate = new Date(task.dueDate);
+        const today = new Date();
 
-    // Đặt lại giờ về 0 để chỉ so sánh ngày/tháng/năm
-    today.setHours(0, 0, 0, 0);
-    dueDate.setHours(0, 0, 0, 0);
+        // Đặt lại giờ về 0 để chỉ so sánh ngày/tháng/năm
+        today.setHours(0, 0, 0, 0);
+        dueDate.setHours(0, 0, 0, 0);
 
-    return dueDate < today && isNotDone;
-  }).length;
+        return dueDate < today && isNotDone;
+      }).length || 0,
+    [tasks],
+  );
 
   return (
     <div className="flex gap-4 mb-7">

@@ -4,6 +4,7 @@ import SelectField from "./UI/SelectField";
 import TextArea from "./UI/TextArea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useModal } from "../context/ModalContext";
 
 const taskSchema = z.object({
   title: z.string().min(3, { message: "Title phải có 3 ký tự" }),
@@ -14,7 +15,8 @@ const taskSchema = z.object({
   status: z.string().optional(),
 });
 
-const TaskForm = ({ initialValues, onSubmit, onClose }) => {
+const TaskForm = ({ initialValues, onSubmit }) => {
+  const { closeModal } = useModal();
   let defaultValues = {
     title: "",
     description: "",
@@ -99,7 +101,7 @@ const TaskForm = ({ initialValues, onSubmit, onClose }) => {
         error={errors.tags}
       />
       <div className="mt-3.5 flex items-center justify-end gap-3.5">
-        <button type="button" className="btn btn-ghost" onClick={onClose}>
+        <button type="button" className="btn btn-ghost" onClick={closeModal}>
           Hủy
         </button>
         <button type="submit" className="btn btn-primary">
