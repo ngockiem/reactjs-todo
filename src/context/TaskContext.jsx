@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import { ACTIONS, taskReducer } from "./TaskReducer";
 
 // 1. Tạo context
@@ -29,6 +36,19 @@ export const TaskProvider = ({ children }) => {
     }
   });
 
+  const [filter, setFilter] = useState({ search: "", priority: "all" });
+
+  const filteredTasks = useMemo(() => {
+    return tasks.filter((task) => {
+      const matchSearch = task.title
+        .toLowerCase()
+        .includes(filter.search.toLowerCase());
+      const matchPriority =
+        filter.priority === "all" || task.priority === filter.priority;
+      return matchSearch && matchPriority;
+    });
+  }, [tasks, filter]);
+
   // Mỗi khi task thay đổi thì lưu vào localStorage
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -45,7 +65,16 @@ export const TaskProvider = ({ children }) => {
 
   return (
     <TaskContext.Provider
-      value={{ tasks, addTask, editTask, deleteTask, moveTask }}
+      value={{
+        tasks,
+        filteredTasks,
+        filter,
+        setFilter,
+        addTask,
+        editTask,
+        deleteTask,
+        moveTask,
+      }}
     >
       {children}
     </TaskContext.Provider>

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import Modal from "./components/commons/Modal";
 import FilterBar from "./components/FilterBar";
@@ -11,22 +10,10 @@ import { useModal } from "./context/ModalContext";
 
 function App() {
   const { modalConfig, closeModal } = useModal();
-  const { addTask } = useTasks();
-
-  const handleAddTask = (formData) => {
-    addTask({
-      ...formData,
-      id: crypto.randomUUID(),
-      status: "todo",
-      createdAt: new Date().toISOString(),
-    });
-    closeModal();
-    toast.success("Thêm task mới thành công");
-  };
 
   return (
     <>
-      <Header handleAddTask={handleAddTask} />
+      <Header />
       <main className="pt-7 px-8 pb-10">
         {/* title */}
         <div className="flex items-end justify-between mb-7">
@@ -46,11 +33,11 @@ function App() {
         {/* Kanban board */}
         <div className="grid grid-cols-3 gap-5 items-start">
           {/* todo column */}
-          <TodoColumn type="todo" handleAddTask={handleAddTask} />
+          <TodoColumn type="todo" />
           {/* doing column */}
-          <TodoColumn type="doing" handleAddTask={handleAddTask} />
+          <TodoColumn type="doing" />
           {/* done column */}
-          <TodoColumn type="done" handleAddTask={handleAddTask} />
+          <TodoColumn type="done" />
         </div>
       </main>
       {modalConfig.isOpen && (

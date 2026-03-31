@@ -4,23 +4,23 @@ import { useTasks } from "../context/TaskContext";
 import { useModal } from "../context/ModalContext";
 import TaskForm from "./TaskForm";
 
-const TodoColumn = ({ type, handleAddTask }) => {
+const TodoColumn = ({ type }) => {
   const labels = {
     todo: "Cần làm",
     doing: "Đang làm",
     done: "Hoàn thành",
   };
 
-  const { tasks } = useTasks();
+  const { filteredTasks } = useTasks();
   const { openModal } = useModal();
 
-  const filteredTasks = tasks.filter((task) => task.status === type) || [];
+  const columnTasks = filteredTasks.filter((task) => task.status === type);
   const totalTasks = filteredTasks.length || 0;
 
   const handleOpenModal = () => {
     openModal({
       title: "Thêm task mới",
-      children: <TaskForm onSubmit={handleAddTask} />,
+      children: <TaskForm />,
     });
   };
 
@@ -56,7 +56,7 @@ const TodoColumn = ({ type, handleAddTask }) => {
       {/* task list */}
       <div className="p-3 flex flex-col gap-2 min-h-20">
         {/* task */}
-        {filteredTasks.map((task) => (
+        {columnTasks.map((task) => (
           <TaskCard
             key={task.id}
             type={task.status}

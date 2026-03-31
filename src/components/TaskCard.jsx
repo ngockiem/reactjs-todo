@@ -4,6 +4,7 @@ import TaskForm from "./TaskForm";
 import { useTasks } from "../context/TaskContext";
 import toast from "react-hot-toast";
 import { useModal } from "../context/ModalContext";
+import { isOverdue, formatDate } from "../utils/dateHelpers";
 
 const TaskCard = ({
   type,
@@ -14,25 +15,9 @@ const TaskCard = ({
   dueDate,
   task,
 }) => {
-  const { editTask, deleteTask } = useTasks();
-  const { openModal, closeModal } = useModal();
-
-  const handleEditTask = (formData) => {
-    // Fixed logic
-    const updatedTask = {
-      ...task,
-      ...formData,
-      tags: formData.tags
-        ? formData.tags
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean)
-        : task.tags,
-    };
-    editTask(updatedTask);
-    closeModal();
-    toast.success("Cập nhật task thành công!");
-  };
+  const { deleteTask } = useTasks();
+  const { openModal } = useModal();
+  const overdue = isOverdue(dueDate, task.status);
 
   const handleDeleteTask = () => {
     deleteTask(task.id);
@@ -42,7 +27,7 @@ const TaskCard = ({
   const handleOpenModal = () => {
     openModal({
       title: "Cập nhật task",
-      children: <TaskForm initialValues={task} onSubmit={handleEditTask} />,
+      children: <TaskForm initialValues={task} />,
     });
   };
 
@@ -64,7 +49,7 @@ const TaskCard = ({
     .filter(Boolean); // Loại bỏ các tag rỗng
 
   return (
-    <div data-type={type} className="task-card">
+    <div data-type={type} className={`task-card ${overdue ? "overdue" : ""}`}>
       <div className="flex items-start justify-between gap-2 mb-2">
         <h4 className="text-[13px] font-medium leading-[1.4] text-primary capitalize">
           {title}
@@ -91,8 +76,14 @@ const TaskCard = ({
       </div>
       <div className="flex items-center justify-between">
         <div className={`flex items-center gap-1 text-[11px] text-muted`}>
-          <Clock size={10} className="stroke-muted" />
-          <span>{dueDate}</span>
+          <Clock
+            size={10}
+            className={overdue ? "stroke-red-500" : "stroke-muted"}
+          />
+          <span className={overdue ? "text-red-500 font-medium" : "text-muted"}>
+            {formatDate(dueDate)}
+            {overdue && " · Quá hạn"}
+          </span>
         </div>
         <PriorityLabel priority={priority} />
         <button

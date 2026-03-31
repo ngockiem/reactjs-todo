@@ -5,6 +5,8 @@ import TextArea from "./UI/TextArea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useModal } from "../context/ModalContext";
+import { useTasks } from "../context/TaskContext";
+import toast from "react-hot-toast";
 
 const taskSchema = z.object({
   title: z.string().min(3, { message: "Title phải có 3 ký tự" }),
@@ -15,8 +17,35 @@ const taskSchema = z.object({
   status: z.string().optional(),
 });
 
-const TaskForm = ({ initialValues, onSubmit }) => {
+const TaskForm = ({ initialValues = null }) => {
   const { closeModal } = useModal();
+  const { addTask, editTask } = useTasks();
+  const handleAddTask = (formData) => {
+    addTask({
+      ...formData,
+      id: crypto.randomUUID(),
+      status: "todo",
+      createdAt: new Date().toISOString(),
+    });
+    closeModal();
+    toast.success("Thêm task mới thành công");
+  };
+  const handleEditTask = (formData) => {
+    // Fixed logic
+    const updatedTask = {
+      ...initialValues,
+      ...formData,
+      tags: formData.tags
+        ? formData.tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
+        : task.tags,
+    };
+    editTask(updatedTask);
+    closeModal();
+    toast.success("Cập nhật task thành công!");
+  };
   let defaultValues = {
     title: "",
     description: "",
@@ -40,14 +69,20 @@ const TaskForm = ({ initialValues, onSubmit }) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({
     resolver: zodResolver(taskSchema),
     defaultValues: defaultValues,
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3.5">
+    <form
+      onSubmit={
+        initialValues
+          ? handleSubmit(handleEditTask)
+          : handleSubmit(handleAddTask)
+      }
+      className="flex flex-col gap-3.5"
+    >
       <InputField
         label="Tên task"
         type="text"
@@ -68,7 +103,7 @@ const TaskForm = ({ initialValues, onSubmit }) => {
           options={[
             { value: "high", label: "Cao" },
             { value: "medium", label: "Trung bình" },
-            { value: "low", label: "Thống" },
+            { value: "low", label: "Thấp" },
           ]}
           {...register("priority")}
           error={errors.priority}

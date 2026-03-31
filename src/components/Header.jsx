@@ -2,12 +2,12 @@ import { ChartNoAxesColumn, Plus } from "lucide-react";
 import TaskForm from "./TaskForm";
 import { useModal } from "../context/ModalContext";
 
-const Header = ({ handleAddTask }) => {
+const Header = () => {
   const { openModal } = useModal();
   const handleOpenModal = () => {
     openModal({
       title: "Thêm task mới",
-      children: <TaskForm onSubmit={handleAddTask} />,
+      children: <TaskForm />,
     });
   };
   return (
