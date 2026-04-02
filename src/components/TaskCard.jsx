@@ -5,6 +5,8 @@ import { useTasks } from "../context/TaskContext";
 import toast from "react-hot-toast";
 import { useModal } from "../context/ModalContext";
 import { isOverdue, formatDate } from "../utils/dateHelpers";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 
 const TaskCard = ({
   type,
@@ -18,6 +20,19 @@ const TaskCard = ({
   const { deleteTask } = useTasks();
   const { openModal } = useModal();
   const overdue = isOverdue(dueDate, task.status);
+
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: task.id,
+      // Truyền status hiện tại để App biết task đang ở cột nào
+      data: { status: task.status },
+    });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    opacity: isDragging ? 0.4 : 1,
+    cursor: isDragging ? "grabbing" : "grab",
+  };
 
   const handleDeleteTask = () => {
     deleteTask(task.id);
@@ -49,14 +64,24 @@ const TaskCard = ({
     .filter(Boolean); // Loại bỏ các tag rỗng
 
   return (
-    <div data-type={type} className={`task-card ${overdue ? "overdue" : ""}`}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners} // xử lý sự kiện kéo
+      {...attributes} // accessibility
+      data-type={type}
+      className={`task-card ${isOverdue(dueDate, task.status) ? "overdue" : ""}`}
+    >
       <div className="flex items-start justify-between gap-2 mb-2">
         <h4 className="text-[13px] font-medium leading-[1.4] text-primary capitalize">
           {title}
         </h4>
         <button
           className="w-5.5 h-5.5 flex items-center justify-center rounded-sm text-muted cursor-pointer shrink-0 border-none bg-none hover:text-primary hover:bg-surface2"
-          onClick={() => handleOpenModal()}
+          onClick={() => {
+            e.stopPropagation();
+            handleOpenModal();
+          }}
         >
           <EllipsisVertical size={16} className="stroke-muted" />
         </button>
@@ -89,7 +114,10 @@ const TaskCard = ({
         <button
           type="button"
           className="w-5.5 h-5.5 flex items-center justify-center rounded-sm text-muted cursor-pointer shrink-0 border-none bg-none hover:text-primary hover:bg-surface2"
-          onClick={handleDeleteTask}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteTask();
+          }}
         >
           <Trash2 size={12} className="stroke-muted" />
         </button>

@@ -3,6 +3,7 @@ import TaskCard from "./TaskCard";
 import { useTasks } from "../context/TaskContext";
 import { useModal } from "../context/ModalContext";
 import TaskForm from "./TaskForm";
+import { useDroppable } from "@dnd-kit/core";
 
 const TodoColumn = ({ type }) => {
   const labels = {
@@ -10,6 +11,12 @@ const TodoColumn = ({ type }) => {
     doing: "Đang làm",
     done: "Hoàn thành",
   };
+
+  // Đăng ký cột này là vùng có thể thả vào, id= type (todo, doing, done)
+  const { setNodeRef, isOver } = useDroppable({
+    id: type,
+  });
+  const { tasks } = useTasks();
 
   const { filteredTasks } = useTasks();
   const { openModal } = useModal();
@@ -54,7 +61,12 @@ const TodoColumn = ({ type }) => {
         </button>
       </div>
       {/* task list */}
-      <div className="p-3 flex flex-col gap-2 min-h-20">
+      <div
+        ref={setNodeRef}
+        className={`p-3 flex flex-col gap-2 min-h-20 rounded-lg transition-colors duration-150
+          ${isOver ? "bg-surface2/80 ring-2 ring-inset ring-(--type-accent)/30" : ""}
+        `}
+      >
         {/* task */}
         {columnTasks.map((task) => (
           <TaskCard
