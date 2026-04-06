@@ -78,7 +78,7 @@ const TaskCard = ({
         </h4>
         <button
           className="w-5.5 h-5.5 flex items-center justify-center rounded-sm text-muted cursor-pointer shrink-0 border-none bg-none hover:text-primary hover:bg-surface2"
-          onClick={() => {
+          onClick={(e) => {
             e.stopPropagation();
             handleOpenModal();
           }}

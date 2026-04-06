@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 
 const SelectField = forwardRef(
   ({ label, options, error, className, ...props }, ref) => {
+    SelectField.displayName = "SelectField";
     return (
       <div className="relative w-full">
         {/* label */}

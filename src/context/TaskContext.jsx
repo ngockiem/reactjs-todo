@@ -31,7 +31,7 @@ export const TaskProvider = ({ children }) => {
     try {
       const saved = localStorage.getItem("tasks");
       return saved ? JSON.parse(saved) : initial;
-    } catch (error) {
+    } catch (_) {
       return initial;
     }
   });

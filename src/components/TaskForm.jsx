@@ -40,7 +40,7 @@ const TaskForm = ({ initialValues = null }) => {
             .split(",")
             .map((t) => t.trim())
             .filter(Boolean)
-        : task.tags,
+        : initialValues.tags,
     };
     editTask(updatedTask);
     closeModal();

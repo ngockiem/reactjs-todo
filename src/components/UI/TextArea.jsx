@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 
 const TextArea = forwardRef(({ label, error, className, ...props }, ref) => {
+  TextArea.displayName = "TextArea";
   return (
     <div className="relative w-full">
       {/* label */}

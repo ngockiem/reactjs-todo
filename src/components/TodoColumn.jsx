@@ -16,13 +16,12 @@ const TodoColumn = ({ type }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: type,
   });
-  const { tasks } = useTasks();
+  const { tasks, filteredTasks } = useTasks();
 
-  const { filteredTasks } = useTasks();
   const { openModal } = useModal();
 
   const columnTasks = filteredTasks.filter((task) => task.status === type);
-  const totalTasks = filteredTasks.length || 0;
+  const totalTasks = columnTasks.length;
 
   const handleOpenModal = () => {
     openModal({

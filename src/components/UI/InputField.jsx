@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 
 const InputField = forwardRef(({ label, error, className, ...props }, ref) => {
+  InputField.displayName = "InputField";
   return (
     <div className="relative w-full">
       {/* label */}
@@ -9,12 +10,7 @@ const InputField = forwardRef(({ label, error, className, ...props }, ref) => {
           {label}
         </label>
       )}
-      <input
-        type="text"
-        ref={ref}
-        {...props}
-        className={`input ${className}`}
-      />
+      <input ref={ref} {...props} className={`input ${className}`} />
       {error && (
         <p className="text-[11px] text-red-600 py-1.25 px-3 rounded-xs border border-solid border-red-400 bg-red-100 font-medium block mt-1.5">
           {error?.message}

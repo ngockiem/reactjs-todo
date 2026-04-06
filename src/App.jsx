@@ -31,10 +31,10 @@ function App() {
 
     if (!over) return;
 
-    const tastId = active.id;
+    const taskId = active.id;
     const newStatus = over.id;
     if (active.data.current?.status !== newStatus) {
-      moveTask(tastId, newStatus);
+      moveTask(taskId, newStatus);
     }
   };
 
