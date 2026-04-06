@@ -12,10 +12,11 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { formatLastUpdated } from "./utils/dateHelpers";
 
 function App() {
   const { modalConfig, closeModal } = useModal();
-  const { moveTask } = useTasks();
+  const { moveTask, lastUpdated } = useTasks();
 
   // Sensor - cần kéo 5px mới kích hoạt, tránh nhầm
   const sensors = useSensors(
@@ -50,7 +51,7 @@ function App() {
                 Dự án cá nhân
               </h2>
               <p className="text-[13px] text-muted mt-0.75 font-light">
-                Cập nhật lần cuối: hôm nay lúc 10:32
+                Cập nhật lần cuối: {formatLastUpdated(lastUpdated)}
               </p>
             </div>
             {/* filter bar */}

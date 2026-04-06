@@ -55,10 +55,6 @@ const Header = () => {
       </div>
       {/* header right */}
       <div className="flex items-center gap-3">
-        <button className="btn btn-ghost">
-          <ChartNoAxesColumn size={13} />
-          <span>Báo cáo</span>
-        </button>
         <button className="btn-primary btn" onClick={() => handleOpenModal()}>
           <Plus size={13} />
           <span>Thêm task</span>

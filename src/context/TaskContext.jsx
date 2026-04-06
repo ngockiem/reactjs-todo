@@ -36,6 +36,10 @@ export const TaskProvider = ({ children }) => {
     }
   });
 
+  const [lastUpdated, setLastUpdated] = useState(() => {
+    return localStorage.getItem("lastUpdated") || null;
+  });
+
   const [filter, setFilter] = useState({ search: "", priority: "all" });
 
   const filteredTasks = useMemo(() => {
@@ -51,7 +55,10 @@ export const TaskProvider = ({ children }) => {
 
   // Mỗi khi task thay đổi thì lưu vào localStorage
   useEffect(() => {
+    const now = new Date().toISOString();
     localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem("lastUpdated", now);
+    setLastUpdated(now);
   }, [tasks]);
 
   // Helper functions - thay cho displatch trực tiếp
@@ -74,6 +81,7 @@ export const TaskProvider = ({ children }) => {
         editTask,
         deleteTask,
         moveTask,
+        lastUpdated,
       }}
     >
       {children}
